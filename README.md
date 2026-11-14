@@ -40,10 +40,37 @@ tools/generate-index.ps1   # validation + generation
 
 `logo.png` (optional) becomes the entry's `logoUrl`.
 
+## Index signing
+
+`index.sig` is an ECDSA P-256 signature envelope over the exact `index.json` bytes:
+
+```json
+{ "algorithm": "ecdsa-p256-sha256", "signature": "<base64 DER>", "signedAt": "..." }
+```
+
+- CI signs after index generation when the `INDEX_SIGNING_KEY` secret is present (base64-encoded PEM
+  private key); without the secret the step is skipped (transition window) and the workflow still
+  publishes an unsigned index.
+- `public.pem` (committed at the repo root) is the verification anchor; CLIHub embeds the same key.
+- `-Verify` mode (used by the PR check) validates `index.sig` against `public.pem`.
+- `index.json`/`index.sig` are pinned to LF in `.gitattributes`: any line-ending change invalidates
+  the signature byte-for-byte.
+
+Key generation (one-time, maintainer):
+
+```bash
+openssl ecparam -name prime256v1 -genkey -noout -out private.pem
+openssl ec -in private.pem -pubout -out public.pem
+base64 -w0 private.pem   # paste into the INDEX_SIGNING_KEY repository secret
+```
+
+Never commit `private.pem`.
+
 ## Local regeneration
 
 ```powershell
 ./tools/generate-index.ps1
+./tools/sign-index.ps1            # signs only when INDEX_SIGNING_KEY is set
 ```
 
-The script is idempotent: it rewrites `index.json` only when the plugin set changes.
+Both scripts are idempotent: they rewrite their outputs only when the content actually changes.

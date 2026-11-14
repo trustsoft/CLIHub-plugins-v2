@@ -1,0 +1,4 @@
+# The signature covers the exact index.json bytes: pin LF so a line-ending flip
+# on any platform cannot invalidate index.sig byte-for-byte.
+index.json text eol=lf
+index.sig text eol=lf

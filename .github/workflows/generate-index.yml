@@ -5,7 +5,8 @@ on:
     branches: [master]
   push:
     branches: [master]
-    paths: ['plugins/**', 'tools/generate-index.ps1']
+    paths: ['plugins/**', 'tools/generate-index.ps1', 'tools/sign-index.ps1', 'public.pem']
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -21,15 +22,28 @@ jobs:
         shell: pwsh
         run: ./tools/generate-index.ps1 -RepoOwner trustsoft -RepoName CLIHub-plugins-v2 -Branch master
 
+      # Signing runs in push mode only; the secret is unavailable to fork PRs.
+      - name: "Sign index (transition: skipped while the secret is absent)"
+        if: github.event_name == 'push'
+        shell: pwsh
+        env:
+          INDEX_SIGNING_KEY: ${{ secrets.INDEX_SIGNING_KEY }}
+        run: ./tools/sign-index.ps1
+
+      - name: Verify signature (advisory in PR mode)
+        if: github.event_name == 'pull_request'
+        shell: pwsh
+        run: ./tools/sign-index.ps1 -Verify
+
       # Contributors submit only plugins/**; after merge the workflow opens a PR with the
-      # regenerated index (branch protection requires a PR even for the CI bot).
+      # regenerated index and signature (branch protection requires a PR even for the CI bot).
       - name: Report stale index (advisory)
         if: github.event_name == 'pull_request'
         run: |
-          if git diff --quiet -- index.json; then
-            echo "index.json up to date"
+          if git diff --quiet -- index.json index.sig; then
+            echo "index.json/index.sig up to date"
           else
-            echo "::warning::index.json differs from plugins/** — a regeneration PR will be opened after merge"
+            echo "::warning::index.json or index.sig differs from plugins/** — a regeneration PR will be opened after merge"
           fi
 
       - name: Open PR with regenerated index
@@ -37,26 +51,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if git diff --exit-code --quiet -- index.json; then
-            echo "index.json unchanged"
+          if git diff --exit-code --quiet -- index.json index.sig; then
+            echo "index.json and index.sig unchanged"
             exit 0
           fi
           git config user.name "clihub-bot"
           git config user.email "clihub-bot@users.noreply.github.com"
           git checkout -b index-regen
-          git add index.json
-          git commit -m "chore: regenerate index.json"
+          git add index.json index.sig
+          git commit -m "chore: regenerate index.json and index.sig"
           git push origin index-regen --force-with-lease
           if gh pr view index-regen --json state --jq .state >/dev/null 2>&1; then
             echo "A PR for index-regen is already open"
           else
             gh pr create --base master --head index-regen \
               --title "chore: regenerate index.json" \
-              --body "CI regenerated \`index.json\` after a plugin change on master. Review and merge."
+              --body "CI regenerated \`index.json\` (and \`index.sig\` when signing is enabled) after a plugin change on master. Review and merge."
           fi
-
-      # Reserved for the signing slice (ADR-0015 in the CLIHub repository):
-      # - name: Sign index
-      #   env:
-      #     ED25519_PRIVATE_KEY: ${{ secrets.INDEX_SIGNING_KEY }}
-      #   run: ./tools/sign-index.ps1   # writes index.sig
