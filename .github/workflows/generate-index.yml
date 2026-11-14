@@ -40,7 +40,7 @@ jobs:
       - name: Report stale index (advisory)
         if: github.event_name == 'pull_request'
         run: |
-          if git diff --quiet -- index.json index.sig; then
+          if [ -z "$(git status --porcelain -- index.json index.sig)" ]; then
             echo "index.json/index.sig up to date"
           else
             echo "::warning::index.json or index.sig differs from plugins/** — a regeneration PR will be opened after merge"
@@ -51,7 +51,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if git diff --exit-code --quiet -- index.json index.sig; then
+          # git status, not git diff: a newly signed index.sig is untracked and diff-invisible.
+          if [ -z "$(git status --porcelain -- index.json index.sig)" ]; then
             echo "index.json and index.sig unchanged"
             exit 0
           fi
