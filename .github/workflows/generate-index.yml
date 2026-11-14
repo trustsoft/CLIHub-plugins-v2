@@ -22,9 +22,9 @@ jobs:
         shell: pwsh
         run: ./tools/generate-index.ps1 -RepoOwner trustsoft -RepoName CLIHub-plugins-v2 -Branch master
 
-      # Signing runs in push mode only; the secret is unavailable to fork PRs.
+      # Signing runs in push mode (and on a manual dispatch); the secret is unavailable to fork PRs.
       - name: "Sign index (transition: skipped while the secret is absent)"
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         shell: pwsh
         env:
           INDEX_SIGNING_KEY: ${{ secrets.INDEX_SIGNING_KEY }}
@@ -47,7 +47,7 @@ jobs:
           fi
 
       - name: Open PR with regenerated index
-        if: github.event_name == 'push'
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
