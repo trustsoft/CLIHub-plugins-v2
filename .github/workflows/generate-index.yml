@@ -1,0 +1,51 @@
+name: generate-index
+
+on:
+  pull_request:
+    branches: [master]
+    paths: ['plugins/**', 'tools/generate-index.ps1']
+  push:
+    branches: [master]
+    paths: ['plugins/**', 'tools/generate-index.ps1']
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate descriptors and generate index
+        shell: pwsh
+        run: ./tools/generate-index.ps1 -RepoOwner trustsoft -RepoName CLIHub-plugins-v2 -Branch master
+
+      # Contributors submit only plugins/**; the index is regenerated on merge.
+      - name: Report stale index (advisory)
+        if: github.event_name == 'pull_request'
+        run: |
+          if git diff --quiet -- index.json; then
+            echo "index.json up to date"
+          else
+            echo "::warning::index.json differs from plugins/** — it will be regenerated on merge"
+          fi
+
+      - name: Commit regenerated index
+        if: github.event_name == 'push'
+        run: |
+          if git diff --exit-code --quiet -- index.json; then
+            echo "index.json unchanged"
+          else
+            git config user.name "clihub-bot"
+            git config user.email "clihub-bot@users.noreply.github.com"
+            git add index.json
+            git commit -m "chore: regenerate index.json [skip plugins]"
+            git push
+          fi
+
+      # Reserved for the signing slice (ADR-0015 in the CLIHub repository):
+      # - name: Sign index
+      #   env:
+      #     ED25519_PRIVATE_KEY: ${{ secrets.INDEX_SIGNING_KEY }}
+      #   run: ./tools/sign-index.ps1   # writes index.sig
