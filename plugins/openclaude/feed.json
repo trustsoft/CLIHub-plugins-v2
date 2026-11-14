@@ -1,0 +1,7 @@
+{
+    "compatibility":  "\u003e=1.1.1",
+    "package":  {
+                    "url":  "https://github.com/trustsoft/CLIHub-plugins/releases/download/openclaude-1.0.0/openclaude-1.0.0.clihub-plugin.zip",
+                    "sha256":  "f6c31ff7c4efdfb0995f34f60d71632da99438e6472e6e3c42b90006dbaed557"
+                }
+}

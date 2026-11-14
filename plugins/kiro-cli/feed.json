@@ -1,0 +1,7 @@
+{
+    "compatibility":  "\u003e=1.1.0",
+    "package":  {
+                    "url":  "https://github.com/trustsoft/CLIHub-plugins/releases/download/kiro-cli-1.0.0/kiro-cli-1.0.0.clihub-plugin.zip",
+                    "sha256":  "6423e7b951945051f801b0cfa4bed4934c0d40ee2c4a75dd42a5c5b66c804530"
+                }
+}

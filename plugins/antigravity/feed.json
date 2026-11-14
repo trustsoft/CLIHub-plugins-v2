@@ -1,0 +1,7 @@
+{
+    "compatibility":  "\u003e=1.1.0",
+    "package":  {
+                    "url":  "https://github.com/trustsoft/CLIHub-plugins/releases/download/antigravity-1.0.0/antigravity-1.0.0.clihub-plugin.zip",
+                    "sha256":  "ff1d3a8764276eab6613821ff950904a841e9b5e3ac494efb3356fd50c6ef158"
+                }
+}

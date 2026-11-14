@@ -1,0 +1,7 @@
+{
+    "compatibility":  "\u003e=1.1.1",
+    "package":  {
+                    "url":  "https://github.com/trustsoft/CLIHub-plugins/releases/download/github-copilot-1.0.0/github-copilot-1.0.0.clihub-plugin.zip",
+                    "sha256":  "fc9512dbb7febe766154bad0483f01d3b2c01c0ae6a6c72d216ddb6d5f5719b1"
+                }
+}

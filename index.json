@@ -1,0 +1,389 @@
+{
+  "schemaVersion": 2,
+  "lastUpdated": "2026-11-14T01:55:08Z",
+  "plugins": [
+    {
+      "id": "antigravity",
+      "name": "Antigravity",
+      "description": "Google Antigravity CLI (agy)",
+      "version": "1.0.0",
+      "compatibility": ">=1.1.0",
+      "channel": "stable",
+      "publisher": "CLIHub",
+      "homepage": "https://antigravity.google/docs/cli/overview",
+      "descriptor": {
+        "schemaVersion": 1,
+        "id": "antigravity",
+        "name": "Antigravity",
+        "description": "Google Antigravity CLI (agy)",
+        "version": "1.0.0",
+        "publisher": "CLIHub",
+        "homepage": "https://antigravity.google/docs/cli/overview",
+        "minAppVersion": "1.1.0",
+        "commands": {
+          "launch": {
+            "executable": "agy"
+          },
+          "resume": {
+            "executable": "agy",
+            "arguments": "--continue"
+          },
+          "version": {
+            "executable": "agy",
+            "arguments": "--version"
+          }
+        },
+        "detection": {
+          "systemPaths": [
+            "%USERPROFILE%\\.gemini\\antigravity-cli"
+          ]
+        }
+      },
+      "package": {
+        "url": "https://github.com/trustsoft/CLIHub-plugins/releases/download/antigravity-1.0.0/antigravity-1.0.0.clihub-plugin.zip",
+        "sha256": "ff1d3a8764276eab6613821ff950904a841e9b5e3ac494efb3356fd50c6ef158"
+      },
+      "logoUrl": "https://raw.githubusercontent.com/trustsoft/CLIHub-plugins-v2/master/plugins/antigravity/logo.png",
+      "releaseNotesUrl": null,
+      "signature": null
+    },
+    {
+      "id": "cline-cli",
+      "name": "Cline CLI",
+      "description": "Cline AI coding assistant CLI",
+      "version": "1.0.0",
+      "compatibility": ">=1.1.0",
+      "channel": "stable",
+      "publisher": "CLIHub",
+      "homepage": "https://www.npmjs.com/package/cline",
+      "descriptor": {
+        "schemaVersion": 1,
+        "id": "cline-cli",
+        "name": "Cline CLI",
+        "description": "Cline AI coding assistant CLI",
+        "version": "1.0.0",
+        "publisher": "CLIHub",
+        "homepage": "https://www.npmjs.com/package/cline",
+        "minAppVersion": "1.1.0",
+        "commands": {
+          "launch": {
+            "executable": "cline"
+          },
+          "version": {
+            "executable": "cline",
+            "arguments": "--version"
+          },
+          "update": {
+            "executable": "cline",
+            "arguments": "update"
+          }
+        },
+        "updateCheck": {
+          "source": "npm",
+          "package": "cline"
+        },
+        "detection": {
+          "systemPaths": [
+            "%USERPROFILE%\\.cline",
+            "%LOCALAPPDATA%\\cline"
+          ],
+          "projectIndicators": [
+            ".clinerules"
+          ]
+        }
+      },
+      "package": {
+        "url": "https://github.com/trustsoft/CLIHub-plugins/releases/download/cline-cli-1.0.0/cline-cli-1.0.0.clihub-plugin.zip",
+        "sha256": "b83727907202007fa90daddbda1fd9c535fc2220c1586db6e4ea656da3f712b8"
+      },
+      "logoUrl": "https://raw.githubusercontent.com/trustsoft/CLIHub-plugins-v2/master/plugins/cline-cli/logo.png",
+      "releaseNotesUrl": null,
+      "signature": null
+    },
+    {
+      "id": "github-copilot",
+      "name": "GitHub Copilot",
+      "description": "GitHub Copilot CLI",
+      "version": "1.0.0",
+      "compatibility": ">=1.1.1",
+      "channel": "stable",
+      "publisher": "CLIHub",
+      "homepage": "https://github.com/github/copilot-cli",
+      "descriptor": {
+        "schemaVersion": 1,
+        "id": "github-copilot",
+        "name": "GitHub Copilot",
+        "description": "GitHub Copilot CLI",
+        "version": "1.0.0",
+        "publisher": "CLIHub",
+        "homepage": "https://github.com/github/copilot-cli",
+        "minAppVersion": "1.1.1",
+        "commands": {
+          "launch": {
+            "executable": "copilot"
+          },
+          "resume": {
+            "executable": "copilot",
+            "arguments": "--continue"
+          },
+          "version": {
+            "executable": "copilot",
+            "arguments": "--version"
+          },
+          "update": {
+            "executable": "copilot",
+            "arguments": "update"
+          }
+        },
+        "updateCheck": {
+          "source": "githubReleases",
+          "repo": "github/copilot-cli"
+        },
+        "detection": {
+          "systemPaths": [
+            "%USERPROFILE%\\.copilot",
+            "%LOCALAPPDATA%\\GitHubCopilotCLI"
+          ],
+          "projectIndicators": [
+            ".github/copilot-instructions.md"
+          ]
+        }
+      },
+      "package": {
+        "url": "https://github.com/trustsoft/CLIHub-plugins/releases/download/github-copilot-1.0.0/github-copilot-1.0.0.clihub-plugin.zip",
+        "sha256": "fc9512dbb7febe766154bad0483f01d3b2c01c0ae6a6c72d216ddb6d5f5719b1"
+      },
+      "logoUrl": "https://raw.githubusercontent.com/trustsoft/CLIHub-plugins-v2/master/plugins/github-copilot/logo.png",
+      "releaseNotesUrl": null,
+      "signature": null
+    },
+    {
+      "id": "kilocode",
+      "name": "Kilo Code",
+      "description": "Kilo Code CLI",
+      "version": "1.0.0",
+      "compatibility": ">=1.1.0",
+      "channel": "stable",
+      "publisher": "CLIHub",
+      "homepage": "https://kilo.ai/docs/code-with-ai/platforms/cli",
+      "descriptor": {
+        "schemaVersion": 1,
+        "id": "kilocode",
+        "name": "Kilo Code",
+        "description": "Kilo Code CLI",
+        "version": "1.0.0",
+        "publisher": "CLIHub",
+        "homepage": "https://kilo.ai/docs/code-with-ai/platforms/cli",
+        "minAppVersion": "1.1.0",
+        "commands": {
+          "launch": {
+            "executable": "kilocode"
+          },
+          "resume": {
+            "executable": "kilocode",
+            "arguments": "--continue"
+          },
+          "version": {
+            "executable": "kilocode",
+            "arguments": "--version"
+          },
+          "update": {
+            "executable": "kilocode",
+            "arguments": "upgrade"
+          }
+        },
+        "updateCheck": {
+          "source": "npm",
+          "package": "@kilocode/cli"
+        },
+        "detection": {
+          "systemPaths": [
+            "%USERPROFILE%\\.config\\kilo",
+            "%USERPROFILE%\\.local\\share\\kilo"
+          ],
+          "projectIndicators": [
+            "kilo.json",
+            "kilo.jsonc",
+            ".kilo"
+          ]
+        }
+      },
+      "package": {
+        "url": "https://github.com/trustsoft/CLIHub-plugins/releases/download/kilocode-1.0.0/kilocode-1.0.0.clihub-plugin.zip",
+        "sha256": "dd5e29db37ba2d9ebee6049fb38066153ddfde99ea47578314d2efe1cf6fbfcf"
+      },
+      "logoUrl": "https://raw.githubusercontent.com/trustsoft/CLIHub-plugins-v2/master/plugins/kilocode/logo.png",
+      "releaseNotesUrl": null,
+      "signature": null
+    },
+    {
+      "id": "kiro-cli",
+      "name": "Kiro CLI",
+      "description": "AWS Kiro CLI",
+      "version": "1.0.0",
+      "compatibility": ">=1.1.0",
+      "channel": "stable",
+      "publisher": "CLIHub",
+      "homepage": "https://kiro.dev/docs/cli/",
+      "descriptor": {
+        "schemaVersion": 1,
+        "id": "kiro-cli",
+        "name": "Kiro CLI",
+        "description": "AWS Kiro CLI",
+        "version": "1.0.0",
+        "publisher": "CLIHub",
+        "homepage": "https://kiro.dev/docs/cli/",
+        "minAppVersion": "1.1.0",
+        "commands": {
+          "launch": {
+            "executable": "kiro-cli",
+            "arguments": "chat"
+          },
+          "resume": {
+            "executable": "kiro-cli",
+            "arguments": "chat --resume"
+          },
+          "version": {
+            "executable": "kiro-cli",
+            "arguments": "--version"
+          },
+          "update": {
+            "executable": "kiro-cli",
+            "arguments": "update"
+          }
+        },
+        "detection": {
+          "systemPaths": [
+            "%USERPROFILE%\\.kiro",
+            "%LOCALAPPDATA%\\Kiro-Cli",
+            "%ProgramFiles%\\Kiro-Cli"
+          ],
+          "projectIndicators": [
+            ".kiro"
+          ]
+        }
+      },
+      "package": {
+        "url": "https://github.com/trustsoft/CLIHub-plugins/releases/download/kiro-cli-1.0.0/kiro-cli-1.0.0.clihub-plugin.zip",
+        "sha256": "6423e7b951945051f801b0cfa4bed4934c0d40ee2c4a75dd42a5c5b66c804530"
+      },
+      "logoUrl": "https://raw.githubusercontent.com/trustsoft/CLIHub-plugins-v2/master/plugins/kiro-cli/logo.png",
+      "releaseNotesUrl": null,
+      "signature": null
+    },
+    {
+      "id": "mistral-vibe",
+      "name": "Mistral Vibe",
+      "description": "Mistral AI coding agent CLI",
+      "version": "1.0.0",
+      "compatibility": ">=1.1.0",
+      "channel": "stable",
+      "publisher": "CLIHub",
+      "homepage": "https://github.com/mistralai/mistral-vibe",
+      "descriptor": {
+        "schemaVersion": 1,
+        "id": "mistral-vibe",
+        "name": "Mistral Vibe",
+        "description": "Mistral AI coding agent CLI",
+        "version": "1.0.0",
+        "publisher": "CLIHub",
+        "homepage": "https://github.com/mistralai/mistral-vibe",
+        "minAppVersion": "1.1.0",
+        "commands": {
+          "launch": {
+            "executable": "vibe"
+          },
+          "resume": {
+            "executable": "vibe",
+            "arguments": "--continue"
+          },
+          "version": {
+            "executable": "vibe",
+            "arguments": "--version"
+          },
+          "update": {
+            "executable": "vibe",
+            "arguments": "update"
+          }
+        },
+        "updateCheck": {
+          "source": "githubReleases",
+          "repo": "mistralai/mistral-vibe"
+        },
+        "detection": {
+          "systemPaths": [
+            "%USERPROFILE%\\.vibe",
+            "%USERPROFILE%\\.local\\bin\\vibe.exe"
+          ],
+          "projectIndicators": [
+            ".vibe"
+          ]
+        }
+      },
+      "package": {
+        "url": "https://github.com/trustsoft/CLIHub-plugins/releases/download/mistral-vibe-1.0.0/mistral-vibe-1.0.0.clihub-plugin.zip",
+        "sha256": "5bcf4aca3f38557754ef450a10ea4f45ab698d5f501e10ed2627956973daf41c"
+      },
+      "logoUrl": "https://raw.githubusercontent.com/trustsoft/CLIHub-plugins-v2/master/plugins/mistral-vibe/logo.png",
+      "releaseNotesUrl": null,
+      "signature": null
+    },
+    {
+      "id": "openclaude",
+      "name": "OpenClaude",
+      "description": "OpenClaude CLI",
+      "version": "1.0.0",
+      "compatibility": ">=1.1.1",
+      "channel": "stable",
+      "publisher": "CLIHub",
+      "homepage": "https://www.npmjs.com/package/@twigpine/openclaude",
+      "descriptor": {
+        "schemaVersion": 1,
+        "id": "openclaude",
+        "name": "OpenClaude",
+        "description": "OpenClaude CLI",
+        "version": "1.0.0",
+        "publisher": "CLIHub",
+        "homepage": "https://www.npmjs.com/package/@twigpine/openclaude",
+        "minAppVersion": "1.1.1",
+        "commands": {
+          "launch": {
+            "executable": "openclaude"
+          },
+          "resume": {
+            "executable": "openclaude",
+            "arguments": "--continue"
+          },
+          "version": {
+            "executable": "openclaude",
+            "arguments": "--version"
+          },
+          "update": {
+            "executable": "openclaude",
+            "arguments": "update"
+          }
+        },
+        "updateCheck": {
+          "source": "npm",
+          "package": "@twigpine/openclaude"
+        },
+        "detection": {
+          "systemPaths": [
+            "%USERPROFILE%\\.openclaude"
+          ],
+          "projectIndicators": [
+            ".claude",
+            "CLAUDE.md"
+          ]
+        }
+      },
+      "package": {
+        "url": "https://github.com/trustsoft/CLIHub-plugins/releases/download/openclaude-1.0.0/openclaude-1.0.0.clihub-plugin.zip",
+        "sha256": "f6c31ff7c4efdfb0995f34f60d71632da99438e6472e6e3c42b90006dbaed557"
+      },
+      "logoUrl": "https://raw.githubusercontent.com/trustsoft/CLIHub-plugins-v2/master/plugins/openclaude/logo.png",
+      "releaseNotesUrl": null,
+      "signature": null
+    }
+  ]
+}

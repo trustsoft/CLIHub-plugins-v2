@@ -1,0 +1,7 @@
+{
+    "compatibility":  "\u003e=1.1.0",
+    "package":  {
+                    "url":  "https://github.com/trustsoft/CLIHub-plugins/releases/download/mistral-vibe-1.0.0/mistral-vibe-1.0.0.clihub-plugin.zip",
+                    "sha256":  "5bcf4aca3f38557754ef450a10ea4f45ab698d5f501e10ed2627956973daf41c"
+                }
+}

@@ -1,0 +1,7 @@
+{
+    "compatibility":  "\u003e=1.1.0",
+    "package":  {
+                    "url":  "https://github.com/trustsoft/CLIHub-plugins/releases/download/kilocode-1.0.0/kilocode-1.0.0.clihub-plugin.zip",
+                    "sha256":  "dd5e29db37ba2d9ebee6049fb38066153ddfde99ea47578314d2efe1cf6fbfcf"
+                }
+}

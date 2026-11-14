@@ -1,0 +1,7 @@
+{
+    "compatibility":  "\u003e=1.1.0",
+    "package":  {
+                    "url":  "https://github.com/trustsoft/CLIHub-plugins/releases/download/cline-cli-1.0.0/cline-cli-1.0.0.clihub-plugin.zip",
+                    "sha256":  "b83727907202007fa90daddbda1fd9c535fc2220c1586db6e4ea656da3f712b8"
+                }
+}

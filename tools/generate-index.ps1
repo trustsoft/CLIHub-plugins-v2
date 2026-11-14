@@ -18,6 +18,7 @@
       - feed.json (optional overlay): compatibility, channel (only "stable" today),
         releaseNotesUrl, and an optional package (zip) with an https URL and a 64-hex sha256.
       - compatibility is a comma-separated list of ">=|<=|>|<|= major.minor.patch" constraints.
+      - A folder with any validation error is reported and skipped; any error fails the run.
 #>
 [CmdletBinding()]
 param(
@@ -27,6 +28,12 @@ param(
 )
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
+
+# Strict-mode-safe property read: returns $null when the property is absent.
+function Get-Prop($Object, [string]$Name) {
+    $property = $Object.PSObject.Properties[$Name]
+    if ($property) { $property.Value } else { $null }
+}
 
 $root = Split-Path -Parent $PSScriptRoot
 $pluginsDir = Join-Path $root 'plugins'
@@ -50,22 +57,37 @@ foreach ($folder in (Get-ChildItem $pluginsDir -Directory | Sort-Object Name)) {
         continue
     }
 
-    if ($d.id -cne $id) {
-        $errors.Add("$id/: descriptor id '$($d.id)' does not match the folder name")
+    $descriptorId = Get-Prop $d 'id'
+    $name = Get-Prop $d 'name'
+    $description = Get-Prop $d 'description'
+    $version = Get-Prop $d 'version'
+    $publisher = Get-Prop $d 'publisher'
+    $homepage = Get-Prop $d 'homepage'
+
+    $hardFail = $false
+    if ([string]::IsNullOrWhiteSpace($descriptorId)) { $errors.Add("$id/: missing required field 'id'"); $hardFail = $true }
+    elseif ($descriptorId -cne $id) { $errors.Add("$id/: descriptor id '$descriptorId' does not match the folder name"); $hardFail = $true }
+    foreach ($pair in @(@('name', $name), @('description', $description), @('publisher', $publisher), @('homepage', $homepage))) {
+        if ([string]::IsNullOrWhiteSpace($pair[1])) { $errors.Add("$id/: missing required field '$($pair[0])'"); $hardFail = $true }
     }
-    foreach ($field in 'id', 'name', 'description', 'version', 'publisher', 'homepage') {
-        if (-not $d.PSObject.Properties[$field] -or [string]::IsNullOrWhiteSpace($d.$field)) {
-            $errors.Add("$id/: missing required field '$field'")
-        }
+    if ([string]::IsNullOrWhiteSpace($version)) {
+        $errors.Add("$id/: missing required field 'version'")
+        $hardFail = $true
+    } elseif ($version -notmatch '^\d+\.\d+\.\d+$') {
+        $errors.Add("$id/: version '$version' is not major.minor.patch")
+        $hardFail = $true
     }
-    if ($d.version -notmatch '^\d+\.\d+\.\d+$') {
-        $errors.Add("$id/: version '$($d.version)' is not major.minor.patch")
-    }
-    if (-not $d.commands -or -not $d.commands.launch -or -not $d.commands.launch.executable) {
+    if ($hardFail) { continue }
+
+    $commands = Get-Prop $d 'commands'
+    $launch = if ($commands) { Get-Prop $commands 'launch' } else { $null }
+    if (-not $launch -or -not (Get-Prop $launch 'executable')) {
         $errors.Add("$id/: commands.launch.executable is required")
+        continue
     }
     foreach ($cmd in 'resume', 'version', 'update') {
-        if ($d.commands.PSObject.Properties[$cmd] -and $d.commands.$cmd -and -not $d.commands.$cmd.executable) {
+        $cmdObject = if ($commands) { Get-Prop $commands $cmd } else { $null }
+        if ($cmdObject -and -not (Get-Prop $cmdObject 'executable')) {
             $errors.Add("$id/: commands.$cmd.executable is required")
         }
     }
@@ -84,15 +106,20 @@ foreach ($folder in (Get-ChildItem $pluginsDir -Directory | Sort-Object Name)) {
             $errors.Add("$id/: feed.json is not valid JSON ($($_.Exception.Message))")
             continue
         }
-        if ($f.compatibility) { $compatibility = $f.compatibility }
-        if ($f.channel) { $channel = $f.channel }
-        $releaseNotesUrl = $f.releaseNotesUrl
-        if ($f.package) {
-            $package = $f.package
-            if (-not $package.url -or $package.url -notlike 'https://*') {
+        $feedCompatibility = Get-Prop $f 'compatibility'
+        if ($feedCompatibility) { $compatibility = $feedCompatibility }
+        $feedChannel = Get-Prop $f 'channel'
+        if ($feedChannel) { $channel = $feedChannel }
+        $releaseNotesUrl = Get-Prop $f 'releaseNotesUrl'
+        $feedPackage = Get-Prop $f 'package'
+        if ($feedPackage) {
+            $package = $feedPackage
+            $packageUrl = Get-Prop $package 'url'
+            $packageSha256 = Get-Prop $package 'sha256'
+            if (-not $packageUrl -or $packageUrl -notlike 'https://*') {
                 $errors.Add("$id/: package.url must be an https URL")
             }
-            if (-not $package.sha256 -or $package.sha256 -notmatch '^[0-9a-fA-F]{64}$') {
+            if (-not $packageSha256 -or $packageSha256 -notmatch '^[0-9a-fA-F]{64}$') {
                 $errors.Add("$id/: package.sha256 must be 64 hex characters")
             }
         }
@@ -114,13 +141,13 @@ foreach ($folder in (Get-ChildItem $pluginsDir -Directory | Sort-Object Name)) {
 
     $entries.Add([ordered]@{
         id = $id
-        name = $d.name
-        description = $d.description
-        version = $d.version
+        name = $name
+        description = $description
+        version = $version
         compatibility = $compatibility
         channel = $channel
-        publisher = $d.publisher
-        homepage = $d.homepage
+        publisher = $publisher
+        homepage = $homepage
         descriptor = $d
         package = $package
         logoUrl = $logoUrl
