@@ -28,8 +28,12 @@ $signaturePath = Join-Path $root 'index.sig'
 $publicKeyPath = Join-Path $root 'public.pem'
 $algorithm = 'ecdsa-p256-sha256'
 
-$openssl = (Get-Command openssl -ErrorAction SilentlyContinue -CommandType Application |
-    Select-Object -First 1).Source
+$openssl = $null
+$opensslCommand = Get-Command openssl -ErrorAction SilentlyContinue -CommandType Application |
+    Select-Object -First 1
+if ($opensslCommand) {
+    $openssl = $opensslCommand.Source
+}
 if (-not $openssl) {
     $openssl = @('/usr/bin/openssl', '/usr/local/bin/openssl', 'C:\Program Files\Git\usr\bin\openssl.exe') |
         Where-Object { Test-Path $_ } | Select-Object -First 1
