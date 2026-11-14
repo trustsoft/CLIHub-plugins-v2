@@ -3,13 +3,13 @@ name: generate-index
 on:
   pull_request:
     branches: [master]
-    paths: ['plugins/**', 'tools/generate-index.ps1']
   push:
     branches: [master]
     paths: ['plugins/**', 'tools/generate-index.ps1']
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   generate:
@@ -21,27 +21,38 @@ jobs:
         shell: pwsh
         run: ./tools/generate-index.ps1 -RepoOwner trustsoft -RepoName CLIHub-plugins-v2 -Branch master
 
-      # Contributors submit only plugins/**; the index is regenerated on merge.
+      # Contributors submit only plugins/**; after merge the workflow opens a PR with the
+      # regenerated index (branch protection requires a PR even for the CI bot).
       - name: Report stale index (advisory)
         if: github.event_name == 'pull_request'
         run: |
           if git diff --quiet -- index.json; then
             echo "index.json up to date"
           else
-            echo "::warning::index.json differs from plugins/** — it will be regenerated on merge"
+            echo "::warning::index.json differs from plugins/** — a regeneration PR will be opened after merge"
           fi
 
-      - name: Commit regenerated index
+      - name: Open PR with regenerated index
         if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           if git diff --exit-code --quiet -- index.json; then
             echo "index.json unchanged"
+            exit 0
+          fi
+          git config user.name "clihub-bot"
+          git config user.email "clihub-bot@users.noreply.github.com"
+          git checkout -b index-regen
+          git add index.json
+          git commit -m "chore: regenerate index.json"
+          git push origin index-regen --force-with-lease
+          if gh pr view index-regen --json state --jq .state >/dev/null 2>&1; then
+            echo "A PR for index-regen is already open"
           else
-            git config user.name "clihub-bot"
-            git config user.email "clihub-bot@users.noreply.github.com"
-            git add index.json
-            git commit -m "chore: regenerate index.json [skip plugins]"
-            git push
+            gh pr create --base master --head index-regen \
+              --title "chore: regenerate index.json" \
+              --body "CI regenerated \`index.json\` after a plugin change on master. Review and merge."
           fi
 
       # Reserved for the signing slice (ADR-0015 in the CLIHub repository):
